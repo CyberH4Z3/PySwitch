@@ -1,70 +1,72 @@
 ##############################################################################################################################################
-# 
 # Firmware processing configuration. Most options are optional.
-#
 ##############################################################################################################################################
 
-#from pyswitch.clients.kemper.mappings.morph import MAPPING_MORPH_PEDAL
+# Constants for configuration parameters to avoid repetition and improve readability.
+DEFAULT_MIDI_BUFFER_CLEAR = True
+DEFAULT_MAX_REQUEST_LIFETIME_MS = 2000
+DEFAULT_UPDATE_INTERVAL_MS = 200
+DEFAULT_MEMORY_WARN_LIMIT_BYTES = 1024 * 15  # 15kB memory threshold for warning
+DEFAULT_ENABLE_MIDI_BRIDGE = True
+DEFAULT_LED_BRIGHTNESS_ON = 0.3
+DEFAULT_LED_BRIGHTNESS_OFF = 0.02
+DEFAULT_DISPLAY_DIM_FACTOR_ON = 1
+DEFAULT_DISPLAY_DIM_FACTOR_OFF = 0.2
 
+# Configuration dictionary
 Config = {
-    
     # Max. number of MIDI messages being parsed before the next switch state evaluation
     # is triggered. If set to 0, only one message is parsed per tick, which leads to 
     # flickering states sometimes. If set too high, switch states will not be read for too long.
     # A good value is the maximum amount of switches. Default is 10.
-    #"maxConsecutiveMidiMessages": 10,
+    # "maxConsecutiveMidiMessages": 10,
 
     # Clear MIDI buffer before starting processing. Default is True.
-    #"clearBuffers": True,                 
+    "clearBuffers": DEFAULT_MIDI_BUFFER_CLEAR,
 
-    # Max. milliseconds until a request is being terminated and it is
-    # assumed that the Kemper device is offline. Optional, default is 2 seconds.
-    #"maxRequestLifetimeMillis": 2000,
+    # Max. milliseconds until a request is being terminated and assumed that the Kemper device is offline.
+    # Optional, default is 2 seconds (2000 milliseconds).
+    "maxRequestLifetimeMillis": DEFAULT_MAX_REQUEST_LIFETIME_MS,
 
-    # Update interval, for updating the rig date (which triggers all other data to update when changed) (milliseconds)
-    # and other displays if assigned. 200 is the default.
-    #"updateInterval": 200,
+    # Update interval, for updating rig date and other displays (milliseconds). Default is 200.
+    "updateInterval": DEFAULT_UPDATE_INTERVAL_MS,
 
-    # Amount of bytes that must at least be free at the time processing starts (normally the program requires anther about
-    # 10kB for character loading etc., default threshold for the warning is 15kB).
-    #"memoryWarnLimitBytes": 1024 * 15,
+    # Amount of bytes that must at least be free at the time processing starts.
+    # Default threshold for the warning is 15kB.
+    "memoryWarnLimitBytes": DEFAULT_MEMORY_WARN_LIMIT_BYTES,
 
-    # Enables file transfer via MIDI from and to the device using PyMidiBridge (https://github.com/Tunetown/PyMidiBridge).
-    # This costs about 11kB of RAM, so if you run into memory issues, disable this.
-    "enableMidiBridge": True,
+    # Enables file transfer via MIDI from and to the device using PyMidiBridge.
+    # Disabling this reduces memory usage by about 11kB.
+    "enableMidiBridge": DEFAULT_ENABLE_MIDI_BRIDGE,
 
-    # Globally used dim factors for the DisplayLabels. 
-    #"displayDimFactorOn": 1,
-    #"displayDimFactorOff": 0.2,
+    # Globally used brightness values for the LEDs.
+    # Note that not all action definitions in kemper.py or other client implementations may regard this.
+    # "ledBrightnessOn": DEFAULT_LED_BRIGHTNESS_ON,
+    # "ledBrightnessOff": DEFAULT_LED_BRIGHTNESS_OFF,
 
-    # Globally used brightness values for the LEDs. 
-    # Note that not all action definitions in kemper.py or other client implementations have to regard this! See the
-    # parameters of the action definitions in question.
-    #"ledBrightnessOn": 0.3,
-    #"ledBrightnessOff": 0.02,
+    # Globally used dim factors for the DisplayLabels.
+    # "displayDimFactorOn": DEFAULT_DISPLAY_DIM_FACTOR_ON,
+    # "displayDimFactorOff": DEFAULT_DISPLAY_DIM_FACTOR_OFF,
 
     ## Development Options ###################################################################################################################
 
     # Optional, shows the effect slot names in the display labels for EffectEnableAction
-    #"showEffectSlotNames": True,
+    # "showEffectSlotNames": True,
 
-    # Debug output is printed to serial console via USB. 
-    # See https://learn.adafruit.com/welcome-to-circuitpython/advanced-serial-console-on-mac-and-linux 
-
-    #"debugStats": True,                              # Show info about runtime and memory usage periodically every update interval
-    #"debugStatsInterval": 2000,                      # Update interval for runtime statistics (also affects the performance dot, default is 
-                                                      # the "updateInterval" option)
-    #"debugBidirectionalProtocol": True,              # Debug the bidirectional protocol, if any
-    #"debugUnparsedMessages": True,                   # Shows all incoming MIDI messages which have not been parsed by the application.
-    #"debugSentMessages": True,                       # Shows all sent messages
-    #"excludeMessageTypes": [ "SystemExclusive" ],    # Types to excude from "debugUnparsedMessage"
-    #"debugClientStats": True,                        # Periodically shows client information (pending requests etc.). "debugStatsInterval" is used as period.
+    # Debug output options. Uncomment to enable.
+    # "debugStats": True,                            # Show info about runtime and memory usage periodically
+    # "debugStatsInterval": 2000,                    # Update interval for runtime statistics
+    # "debugBidirectionalProtocol": True,            # Debug bidirectional protocol, if any
+    # "debugUnparsedMessages": True,                 # Show all unparsed MIDI messages
+    # "debugSentMessages": True,                     # Show all sent messages
+    # "excludeMessageTypes": ["SystemExclusive"],    # Types to exclude from "debugUnparsedMessage"
+    # "debugClientStats": True,                      # Periodically shows client information
 
     # When a ClientParameterMapping instance is set here, incoming messages for this mapping will be shown.
-    #"debugMapping": MAPPING_MORPH_PEDAL(),
+    # "debugMapping": MAPPING_MORPH_PEDAL(),
 
-    # Explore Mode: Set this to True to boot into explore mode. This mode listens to all GPIO pins available
-    # and outputs the ID of the last pushed one, and also rotates through all available NeoPixels. 
-    # Use this to detect the switch assignments on unknown devices. Optional.
-    #"exploreMode": True
+    # Explore Mode: Set this to True to boot into explore mode.
+    # This mode listens to all GPIO pins available and outputs the ID of the last pushed one,
+    # and also rotates through all available NeoPixels.
+    # "exploreMode": True
 }
